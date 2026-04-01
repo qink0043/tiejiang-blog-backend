@@ -23,7 +23,7 @@ export class PostController {
           : undefined,
         tagId: req.query.tagId ? Number(req.query.tagId) : undefined,
         page: req.query.page ? Number(req.query.page) : 1,
-        pageSize: req.query.pageSize ? Number(req.query.pageSize) : 10,
+        page_size: req.query.page_size ? Number(req.query.page_size) : 10,
       });
       res.json(AppResponse.success(result));
     } catch (error) {

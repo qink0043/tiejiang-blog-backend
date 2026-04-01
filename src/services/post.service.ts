@@ -36,7 +36,7 @@ export class PostService {
   }
 
   async list(query: PostQueryDto) {
-    const { keyword, categoryId, tagId, page = 1, pageSize = 10 } = query;
+    const { keyword, categoryId, tagId, page = 1, page_size = 10 } = query;
     const qb = this.postRepo
       .createQueryBuilder("post")
       .leftJoinAndSelect("post.author", "author")
@@ -60,12 +60,12 @@ export class PostService {
     }
 
     qb.orderBy("post.createdAt", "DESC")
-      .skip((page - 1) * pageSize)
-      .take(pageSize);
+      .skip((page - 1) * page_size)
+      .take(page_size);
 
     const [items, total] = await qb.getManyAndCount();
 
-    return { items, total, page, pageSize };
+    return { items, total, page, page_size };
   }
 
   async getOne(id: number) {

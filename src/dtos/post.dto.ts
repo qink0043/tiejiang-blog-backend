@@ -58,5 +58,5 @@ export class PostQueryDto {
   page?: number = 1;
 
   @IsOptional()
-  pageSize?: number = 10;
+  page_size?: number = 10;
 }
