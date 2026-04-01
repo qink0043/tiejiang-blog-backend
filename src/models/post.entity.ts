@@ -8,6 +8,9 @@ import {
   ManyToMany,
   JoinTable,
   OneToMany,
+  AfterLoad,
+  AfterInsert,
+  AfterUpdate,
 } from "typeorm";
 import { User } from "./user.entity";
 import { Category } from "./category.entity";
@@ -55,4 +58,20 @@ export class Post {
 
   @OneToMany(() => Comment, (comment) => comment.post)
   comments?: Comment[];
+
+  readingTime?: number;
+
+  @AfterLoad()
+  @AfterInsert()
+  @AfterUpdate()
+  private calculateReadingTime() {
+    if (this.content) {
+      // 预计阅读时间：每分钟约 400 个字符（中英文混合常规速度）
+      const speed = 400;
+      this.readingTime = Math.ceil(this.content.length / speed);
+      if (this.readingTime < 1) this.readingTime = 1;
+    } else {
+      this.readingTime = 0;
+    }
+  }
 }
