@@ -37,6 +37,9 @@ export class Post {
   @Column({ default: 0 })
   likeCount!: number;
 
+  @Column({ type: "varchar", length: 255, nullable: true, comment: "文章封面" })
+  cover!: string;
+
   @CreateDateColumn()
   createdAt!: Date;
 
