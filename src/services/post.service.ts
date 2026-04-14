@@ -65,7 +65,18 @@ export class PostService {
 
     const [items, total] = await qb.getManyAndCount();
 
-    return { items, total, page, page_size };
+    const formattedItems = items.map((post) => {
+      const { author, ...rest } = post;
+      return {
+        ...rest,
+        authorInfo: {
+          id: author.id,
+          username: author.username,
+        },
+      };
+    });
+
+    return { items: formattedItems, total, page, page_size };
   }
 
   async getOne(id: number) {
@@ -76,11 +87,17 @@ export class PostService {
 
     if (!post) throw new AppError("Post not found", HttpCode.NOT_FOUND);
 
-    // Increment view count
     post.viewCount += 1;
     await this.postRepo.save(post);
 
-    return post;
+    const { author, ...rest } = post;
+    return {
+      ...rest,
+      authorInfo: {
+        id: author.id,
+        username: author.username,
+      },
+    };
   }
 
   async update(id: number, data: UpdatePostDto) {
