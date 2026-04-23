@@ -18,14 +18,23 @@ export class Comment {
   @Column({ type: "text" })
   content!: string;
 
+  @Column({ nullable: true })
+  email?: string;
+
+  @Column({ type: "enum", enum: ["text", "doodle"], default: "text" })
+  type!: "text" | "doodle";
+
+  @Column({ nullable: true })
+  imageUrl?: string;
+
   @CreateDateColumn()
   createdAt!: Date;
 
   @UpdateDateColumn()
   updatedAt!: Date;
 
-  @ManyToOne(() => User, (user) => user.comments)
-  author!: User;
+  @ManyToOne(() => User, (user) => user.comments, { nullable: true })
+  author?: User;
 
   @ManyToOne(() => Post, (post) => post.comments, { onDelete: "CASCADE" })
   post!: Post;

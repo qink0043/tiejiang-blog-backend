@@ -10,15 +10,21 @@ export class CommentService {
   private commentRepo = AppDataSource.getRepository(Comment);
   private postRepo = AppDataSource.getRepository(Post);
 
-  async create(data: CreateCommentDto, author: User) {
+  async create(data: CreateCommentDto, author?: User) {
     const post = await this.postRepo.findOneBy({ id: data.postId });
     if (!post) throw new AppError("Post not found", HttpCode.NOT_FOUND);
 
     const comment = this.commentRepo.create({
       content: data.content,
+      email: data.email,
+      type: data.type || "text",
+      imageUrl: data.imageUrl || null,
       post,
-      author,
     });
+
+    if (author) {
+      comment.author = author;
+    }
 
     if (data.parentId) {
       const parent = await this.commentRepo.findOneBy({ id: data.parentId });
@@ -31,11 +37,10 @@ export class CommentService {
   async listByPost(postId: number) {
     const comments = await this.commentRepo.find({
       where: { post: { id: postId } },
-      relations: ["author", "parent"],
+      relations: ["author"],
       order: { createdAt: "ASC" },
     });
 
-    // Build tree structure manually or by query
     return this.buildTree(comments);
   }
 

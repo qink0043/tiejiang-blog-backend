@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import express from "express";
+import path from "path";
 import dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
@@ -13,6 +14,7 @@ import postRoutes from "./routes/post.routes";
 import categoryRoutes from "./routes/category.routes";
 import tagRoutes from "./routes/tag.routes";
 import commentRoutes from "./routes/comment.routes";
+import uploadRoutes from "./routes/upload.routes";
 
 dotenv.config();
 
@@ -24,12 +26,16 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
+// Static files for uploaded images
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/tags", tagRoutes);
 app.use("/api/comments", commentRoutes);
+app.use("/api/upload", uploadRoutes);
 
 // Error Handling
 app.use(errorHandler);

@@ -7,7 +7,7 @@ export class CommentController {
 
   create = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const comment = await this.commentService.create(req.body, req.user!);
+      const comment = await this.commentService.create(req.body, req.user);
       res.json(AppResponse.success(comment));
     } catch (error) {
       next(error);
